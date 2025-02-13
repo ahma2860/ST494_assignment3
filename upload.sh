@@ -23,7 +23,7 @@ else
     git remote add origin https://github.com/$GITHUB_USER/$REPO_NAME.git
 fi
 
-git remote set-url origin https://$GITHUB_TOKEN@github.com/$REPO_NAME.git
+git remote set-url origin https://$GITHUB_TOKEN@github.com/$GITHUB_USER/$REPO_NAME.git
 git add .
 git commit -m "Initial commit"
 git branch -M main
