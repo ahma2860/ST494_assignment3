@@ -1,0 +1,142 @@
+---
+title: "Assignment3"
+output: pdf_document
+date: "2025-02-13"
+---
+
+```{r setup, include=FALSE}
+library(ISLR)
+data(Hitters)
+Hitters.new <- na.omit(Hitters)
+X <- as.matrix(Hitters.new[,c(-14,-15,-20,-19)])
+Y <- as.matrix(Hitters.new[,19])
+
+```
+
+Using mallow's cp
+```{r}
+library(leaps)
+
+subset_model <- regsubsets(Y ~ ., data = Hitters.new, nvmax = ncol(X))
+
+subset_summary <- summary(subset_model)
+
+best_model_cp <- which.min(subset_summary$cp)
+
+best_variables_cp <- names(coef(subset_model, best_model_cp))
+print(best_variables_cp)
+
+```
+
+Adjusted R² and BIC:
+```{r}
+best_model_r2 <- which.max(subset_summary$adjr2)
+best_variables_r2 <- names(coef(subset_model, best_model_r2))
+
+best_model_bic <- which.min(subset_summary$bic)
+best_variables_bic <- names(coef(subset_model, best_model_bic))
+
+print(best_variables_r2)  
+print(best_variables_bic) 
+
+```
+
+using step:
+```{r}
+full_model <- lm(Salary ~ ., data = Hitters.new)
+
+backward_model <- step(full_model, direction = "backward", trace = FALSE)
+
+null_model <- lm(Salary ~ 1, data = Hitters.new)
+
+forward_model <- step(null_model, scope = formula(full_model), direction = "forward", trace = FALSE)
+
+
+stepwise_model <- step(null_model, scope = formula(full_model), direction = "both", trace = FALSE)
+
+summary(backward_model)
+summary(forward_model)
+summary(stepwise_model)
+
+```
+
+QUESTION 2
+a)
+```{r}
+data(iris)
+
+iris_data <- iris[, 1:4]
+
+cov_matrix <- var(iris_data)
+
+eigen_decomp <- eigen(cov_matrix)
+
+print(eigen_decomp$values)
+print(eigen_decomp$vectors)
+
+pca_result <- princomp(iris_data, cor = FALSE)
+summary(pca_result)  
+print(pca_result$loadings)
+
+```
+
+b)
+```{r}
+
+pc1 <- eigen_decomp$vectors[, 1]
+pc2 <- eigen_decomp$vectors[, 2]
+
+print(pc1)  
+print(pc2)  
+
+```
+
+c)
+Argument for:
+In case variables have different units, variable differences can dominate PCA.
+
+Argument against: 
+If raw measurements already have meaning. PCA can distort them.
+
+```{r}
+pca_scaled <- princomp(iris_data, cor = TRUE)
+summary(pca_scaled)
+
+```
+
+d)
+```{r}
+pc_projection <- as.matrix(iris_data) %*% eigen_decomp$vectors[, 1:2]
+
+
+iris_pca_df <- data.frame(PC1 = pc_projection[, 1], PC2 = pc_projection[, 2], Species = iris$Species)
+
+library(ggplot2)
+
+ggplot(iris_pca_df, aes(x = PC1, y = PC2, color = Species)) +
+  geom_point(size = 3) +
+  labs(title = "PCA Projection of Iris Data", x = "PC1", y = "PC2") +
+  theme_minimal()
+
+```
+
+e)
+```{r}
+perform_pca <- function(species_name) {
+  species_data <- iris_data[iris$Species == species_name, ]
+  pca_result <- princomp(species_data, cor = FALSE)
+  return(summary(pca_result))
+}
+
+pca_setosa <- perform_pca("setosa")
+pca_versicolor <- perform_pca("versicolor")
+pca_virginica <- perform_pca("virginica")
+
+print(pca_setosa)
+print(pca_versicolor)
+print(pca_virginica)
+
+```
+The first principal component in each species often represents variation in flower size.
+The differences suggest species have different sources of variance.
+When PCA is performed on the full dataset, interspecies variation influences the results, whereas within-species PCA highlights species-specific variation.
