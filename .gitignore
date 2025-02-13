@@ -1,0 +1,9 @@
+# Script files
+upload.sh
+
+# Environment files
+.env
+
+# Other common files to ignore
+.DS_Store
+*.log
