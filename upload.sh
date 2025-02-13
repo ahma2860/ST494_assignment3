@@ -34,3 +34,6 @@ git push -u origin main
 
 
 unset GITHUB_TOKEN
+unset GITHUB_USER
+unset REPO_NAME
+unset FOLDER_PATH
