@@ -1,8 +1,13 @@
 #!/bin/bash
 
-GITHUB_USER="ahma2860"
-REPO_NAME="ST494_assignment3"
-FOLDER_PATH="/mnt/c/Users/Asus/Desktop/STassignment"
+echo "Username: "
+read GITHUB_USER
+
+echo "Repo name: "
+read REPO_NAME
+
+echo "Folder path: "
+read FOLDER_PATH
 
 echo "Enter your GitHub Token: "
 read GITHUB_TOKEN
