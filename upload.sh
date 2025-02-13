@@ -1,9 +1,11 @@
 #!/bin/bash
 
 GITHUB_USER="ahma2860"
-GITHUB_TOKEN="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"
 REPO_NAME="ST494_assignment3"
 FOLDER_PATH="/mnt/c/Users/Asus/Desktop/STassignment"
+
+echo "Enter your GitHub Token: "
+read GITHUB_TOKEN
 
 echo "Creating GitHub repository..."
 curl -v -X POST -H "Authorization: token $GITHUB_TOKEN" \
@@ -29,3 +31,6 @@ git commit -m "Initial commit"
 git branch -M main
 echo "Pushing to GitHub..."
 git push -u origin main
+
+
+unset GITHUB_TOKEN
